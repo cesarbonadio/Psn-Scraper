@@ -1,33 +1,34 @@
-import requests
-import json
-import re
-import re
-import urllib2
+import requests,json,re,time
+from clases import *
 from bs4 import BeautifulSoup
 
 
-psnid = raw_input('Insertar un psn id: ')
-print('Scrapping.....')
+try:
+	psnid = raw_input('Give me a psn id: ')
+except NameError:
+	psnid = input('Give me a psn id: ')
 
 
-r = requests.get('https://psnprofiles.com/'+str(psnid))
+print('Scraping.....')
+scrap = Scraper(psnid)
+print('\nData scraped from: {0} \n Played Games {1}'.format(scrap.getPageName(),psnid))
+print('Json generated:\n\n')
 
-soup = BeautifulSoup(r.content, 'html.parser')
-#print(soup.prettify())
+#juegos =  scrap.getGameTable()
 
-tabla_de_juegos = soup.find('table',{'id':'gamesTable'}).find_all('tr')
+#print(juegos['Minecraft']['trophies']['earned'])
+#print(type(juegos))
+#print(juegos.keys())
+#print('\n\n\n')
 
-print('\nDatos extraidos de la pagina: ' + str(soup.title.string.encode('utf-8')))
-print('Juegos que ha jugado el usuario {0}\n\n'.format(psnid))
+#print(json.dumps(juegos,indent=4))
+
+print(json.dumps(scrap.getPlayerStats(),indent=4))
 
 
-# output [<a class="title" href="/trophies/2340-minecraft/cesar_gamer12" rel="nofollow">Minecraft</a>]
+#print(re.compile('abc'))
 
-for juego in tabla_de_juegos:
-	print(juego.find_all('span')[0].find_all('a')[0].string+': '+ juego.find_all('b')[0].string +
-		  ' trofeos de '+ juego.find_all('b')[1].string)
 
-#print(soup.find('table' , {'id':'gamesTable'}).find_all('tr')[1].find_all('span')[0].find_all('a')[0].string)
 
 
 
