@@ -18,6 +18,11 @@ class Scraper:
 		return soup	
 
 
+	def __replacerList(self,text,re):
+		for r in re:
+			text = text.replace(r[0],r[1])
+		return text
+
 	
 	def getPageName(self):
 		return self.soup.title.string.encode('utf-8')
@@ -34,11 +39,22 @@ class Scraper:
 		percentage = BeautifulSoup(str(profile.find_all(string = lambda text:isinstance(text,Comment))[0]), 'html.parser').span.string
 		country = BeautifulSoup(str(profile.find(id = 'bar-country').get('title')), 'html.parser').center.string
 
+		trophies_count = profile.find_all('li',{'class':['total','platinum','gold','silver','bronze']})
+		trophies_count = [self.__replacerList(trophies_count[n].get_text(),[["\t",""],["\n",""],["\r",""]]) for n in range(len(trophies_count))]
+		
+
 
 		stats.update({ 
-					   'level' : level, 
-					   'percentage': percentage,
-					   'country' : country,
+						'level' : level, 
+					   	'percentage': percentage,
+					   	'country' : country,
+					   	'trophies' : {
+					   	'platinum': trophies_count[1],
+					   	'gold': trophies_count[2],
+					   	'silver': trophies_count[3],
+					   	'bronze': trophies_count[4],
+					   	'total': trophies_count[0]
+					   	}
 					 })
 
 		return stats	
@@ -68,13 +84,9 @@ class Scraper:
 			general_progress = trophie_progress[6].string
 			trophie_progress = [trophie_progress[n].string for n in range(len(trophie_progress)) if n%2!=0]
 
-
-
-
-
 						
 			try:
-				last = game.find_all('div',{'class':'small-info'})[1].get_text().replace("  ","").replace("\n","").replace("\t","")
+				last = 	self.__replacerList(game.find_all('div',{'class':'small-info'})[1].get_text(),[["  ",""],["\n",""],["\t",""]])
 			except IndexError:
 				last = 	'No trophies or missing timestamp for the last earn'
 				pass
