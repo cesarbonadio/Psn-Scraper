@@ -23,7 +23,9 @@ juegos =  scrap.getGameTable()
 
 print(json.dumps(juegos,indent=4))
 
-print(json.dumps(scrap.getPlayerStats(),indent=4))
+print(json.dumps(scrap.getPlayerBasics(),indent=4))
+
+print(json.dumps(scrap.getPlayerStats(),indent = 4))
 
 
 #print(re.compile('abc'))

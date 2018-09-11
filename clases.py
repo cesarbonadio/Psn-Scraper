@@ -28,12 +28,11 @@ class Scraper:
 		return self.soup.title.string.encode('utf-8')
 
 
-	def getPlayerStats(self):
-		stats = {}
+	def getPlayerBasics(self):
+		basics = {}
 
 		#find the profile tag first
 		profile = self.soup.find_all('ul',{'class':'profile-bar'})[0]
-
 
 		level = profile.find_all('li',{'class':'icon-sprite level'})[0].string
 		percentage = BeautifulSoup(str(profile.find_all(string = lambda text:isinstance(text,Comment))[0]), 'html.parser').span.string
@@ -42,9 +41,7 @@ class Scraper:
 		trophies_count = profile.find_all('li',{'class':['total','platinum','gold','silver','bronze']})
 		trophies_count = [self.__replacerList(trophies_count[n].get_text(),[["\t",""],["\n",""],["\r",""]]) for n in range(len(trophies_count))]
 		
-
-
-		stats.update({ 
+		basics.update({ 
 						'level' : level, 
 					   	'percentage': percentage,
 					   	'country' : country,
@@ -57,7 +54,29 @@ class Scraper:
 					   	}
 					 })
 
-		return stats	
+		return basics
+
+
+	def getPlayerStats(self):
+		stats = {}
+
+		#print([text for text in stats_flex])
+		stats_generator = self.soup.find_all('div',{'class':'stats flex'})[0].find_all('span')
+		stats_array = [stats_generator[n].stripped_strings.next() for n in range(len(stats_generator)) if n%2==0]
+		
+
+		stats.update({
+					'played': stats_array[0],
+					'completed' : stats_array[1],
+					'completion' : stats_array[2],
+					'unearned_trophies': stats_array[3],
+					'per_day':stats_array[4],
+					'view': stats_array[5],
+					'world_rank' : stats_array[6],
+					'country_rank': stats_array[7]
+					})
+
+		return stats
 
 
 
@@ -71,6 +90,8 @@ class Scraper:
 		for game in table:
 
 			name = game.find_all('span')[0].find_all('a')[0].string
+
+			print(name)
 
 			earned = game.find_all('b')[0].string
 			unearned = game.find_all('b')[1].string
