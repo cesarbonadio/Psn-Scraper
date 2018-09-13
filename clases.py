@@ -1,6 +1,7 @@
 import requests,json,re,time
 from bs4 import BeautifulSoup
 from bs4 import Comment
+import itertools 
 
 class Scraper:
 
@@ -29,10 +30,8 @@ class Scraper:
 
 
 	def getPlayerBasics(self):
-		basics = {}
-
 		#find the profile tag first
-		profile = self.soup.find_all('ul',{'class':'profile-bar'})[0]
+		profile = self.soup.find('ul',{'class':'profile-bar'})
 
 		level = profile.find_all('li',{'class':'icon-sprite level'})[0].string
 		percentage = BeautifulSoup(str(profile.find_all(string = lambda text:isinstance(text,Comment))[0]), 'html.parser').span.string
@@ -41,30 +40,26 @@ class Scraper:
 		trophies_count = profile.find_all('li',{'class':['total','platinum','gold','silver','bronze']})
 		trophies_count = [self.__replacerList(trophies_count[n].get_text(),[["\t",""],["\n",""],["\r",""]]) for n in range(len(trophies_count))]
 		
-		basics.update({ 
-						'level' : level, 
-					   	'percentage': percentage,
-					   	'country' : country,
-					   	'trophies' : {
-					   	'platinum': trophies_count[1],
-					   	'gold': trophies_count[2],
-					   	'silver': trophies_count[3],
-					   	'bronze': trophies_count[4],
-					   	'total': trophies_count[0]
-					   	}
-					 })
-
-		return basics
-
+		return { 
+					'level' : level, 
+					'percentage': percentage,
+				   	'country' : country,
+				   	'trophies' : {
+				   	'platinum': trophies_count[1],
+				   	'gold': trophies_count[2],
+				   	'silver': trophies_count[3],
+				   	'bronze': trophies_count[4],
+				   	'total': trophies_count[0]
+				   	}
+				}
 
 
 
 	def getPlayerStats(self):
-		stats = {}
 		stats_generator = self.soup.find('div',{'class':'stats flex'}).find_all('span')
 		stats_array = [stats_generator[n].stripped_strings.next() for n in range(len(stats_generator)) if n%2==0]
 		
-		stats.update({
+		return {
 					'played': stats_array[0],
 					'completed' : stats_array[1],
 					'completion' : stats_array[2],
@@ -73,13 +68,9 @@ class Scraper:
 					'views': stats_array[5],
 					'world_rank' : stats_array[6],
 					'country_rank': stats_array[7]
-					})
+		}
 
-		return stats
-
-
-
-
+		
 
 	def getRecentTrophies(self):
 		recent = {}
@@ -105,11 +96,13 @@ class Scraper:
 							'rarity':{
 							'percentage': rarity_percentage,
 							'type' : rarity_type
-							 } 
-						   }
-						})
+					} 
+				}
+			})
 
 		return recent
+
+
 
 
 	def getRarestTrophies(self):
@@ -132,22 +125,24 @@ class Scraper:
 							'rarity':{
 								'percentage': rarity_percentage,
 								'type' : rarity_type
-							 }
-							}
-						  })
+					}
+				}
+			})
 
-		return rarest	
-
-
-
-		
+		return rarest
 
 
-		
-
-			
 
 
+	def getCountTrophiesRarity(self):
+		count_generator = self.soup.find('div',{'class':'row lg-hide'}).stripped_strings
+
+		return {
+					count_generator.next(): count_generator.next(),
+					count_generator.next(): count_generator.next(),
+					count_generator.next(): count_generator.next(),
+					count_generator.next(): count_generator.next()
+		}
 
 
 
@@ -178,25 +173,21 @@ class Scraper:
 
 
 			games.update({name:{
-									'trophies': {
-									'earned': earned , 
-									'unearned': unearned, 
-									'last': last,
-									'progress' : general_progress,
-										'count':{
-										'gold': trophie_progress[0],
-										'silver': trophie_progress[1],
-										'bronze' : trophie_progress[2]
-										}
-									 },
+								'trophies': {
+								'earned': earned , 
+								'unearned': unearned, 
+								'last': last,
+								'progress' : general_progress,
+									'count':{
+									'gold': trophie_progress[0],
+									'silver': trophie_progress[1],
+									'bronze' : trophie_progress[2]
+									}
+								},
 
-									'platforms' : platforms,
-									'rank': rank 
-								}
+								'platforms' : platforms,
+								'rank': rank 
+							}
 						})
 
 		return games
-
-
-
-

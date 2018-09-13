@@ -29,7 +29,9 @@ print('Json generated:\n\n')
 
 #print(json.dumps(scrap.getRecentTrophies(), indent=4))
 
-print(json.dumps(scrap.getRarestTrophies(), indent = 4))
+#print(json.dumps(scrap.getRarestTrophies(), indent = 4))
+
+print(json.dumps(scrap.getCountTrophiesRarity(),indent = 4))
 
 
 #print(re.compile('abc'))
