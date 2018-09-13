@@ -57,11 +57,12 @@ class Scraper:
 		return basics
 
 
+
+
 	def getPlayerStats(self):
 		stats = {}
 
-		#print([text for text in stats_flex])
-		stats_generator = self.soup.find_all('div',{'class':'stats flex'})[0].find_all('span')
+		stats_generator = self.soup.find('div',{'class':'stats flex'}).find_all('span')
 		stats_array = [stats_generator[n].stripped_strings.next() for n in range(len(stats_generator)) if n%2==0]
 		
 
@@ -71,12 +72,51 @@ class Scraper:
 					'completion' : stats_array[2],
 					'unearned_trophies': stats_array[3],
 					'per_day':stats_array[4],
-					'view': stats_array[5],
+					'views': stats_array[5],
 					'world_rank' : stats_array[6],
 					'country_rank': stats_array[7]
 					})
 
 		return stats
+
+
+
+
+
+	def getRecentTrophies(self):
+		recent = {}
+
+		recent_trophies = self.soup.find('ul',{'class':'recent-trophies flex'}).find_all('li')
+
+
+		for trophy in recent_trophies:
+
+			generator = trophy.stripped_strings
+
+			title = generator.next()
+			description = generator.next()
+			ago = generator.next().replace(" in","")
+			game = generator.next()
+			rarity_percentage = generator.next()
+			rarity_type = generator.next()
+
+			type = trophy.find('img').get('alt')
+
+			recent.update({title: {
+							'description': description,
+							'ago': ago,
+							'game' : game,
+							'type': type,
+							'rarity':{
+							'percentage': rarity_percentage,
+							'type' : rarity_type
+							 } 
+						   }
+						})
+
+		return recent	
+
+
 
 
 
@@ -90,8 +130,6 @@ class Scraper:
 		for game in table:
 
 			name = game.find_all('span')[0].find_all('a')[0].string
-
-			print(name)
 
 			earned = game.find_all('b')[0].string
 			unearned = game.find_all('b')[1].string
