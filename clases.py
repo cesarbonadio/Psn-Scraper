@@ -61,11 +61,9 @@ class Scraper:
 
 	def getPlayerStats(self):
 		stats = {}
-
 		stats_generator = self.soup.find('div',{'class':'stats flex'}).find_all('span')
 		stats_array = [stats_generator[n].stripped_strings.next() for n in range(len(stats_generator)) if n%2==0]
 		
-
 		stats.update({
 					'played': stats_array[0],
 					'completed' : stats_array[1],
@@ -85,9 +83,7 @@ class Scraper:
 
 	def getRecentTrophies(self):
 		recent = {}
-
 		recent_trophies = self.soup.find('ul',{'class':'recent-trophies flex'}).find_all('li')
-
 
 		for trophy in recent_trophies:
 
@@ -99,7 +95,6 @@ class Scraper:
 			game = generator.next()
 			rarity_percentage = generator.next()
 			rarity_type = generator.next()
-
 			type = trophy.find('img').get('alt')
 
 			recent.update({title: {
@@ -114,7 +109,43 @@ class Scraper:
 						   }
 						})
 
-		return recent	
+		return recent
+
+
+	def getRarestTrophies(self):
+		rarest = {}
+		rarest_trophies = self.soup.find_all('table',{'class':'zebra'})[2].find_all('tr')
+
+		for trophy in rarest_trophies:
+
+			generator = trophy.stripped_strings
+			
+			title = generator.next()
+			game = generator.next()
+			rarity_percentage = generator.next()
+			rarity_type = generator.next()
+			type = trophy.find_all('img')[1].get('alt')
+
+			rarest.update({title:{
+							'game':game,
+							'type' : type,
+							'rarity':{
+								'percentage': rarity_percentage,
+								'type' : rarity_type
+							 }
+							}
+						  })
+
+		return rarest	
+
+
+
+		
+
+
+		
+
+			
 
 
 
@@ -122,15 +153,11 @@ class Scraper:
 
 	def getGameTable(self):
 		games = {}
-
 		table = self.soup.find('table',{'id':'gamesTable'}).find_all('tr')
-
-
 
 		for game in table:
 
 			name = game.find_all('span')[0].find_all('a')[0].string
-
 			earned = game.find_all('b')[0].string
 			unearned = game.find_all('b')[1].string
 
@@ -142,8 +169,7 @@ class Scraper:
 			trophie_progress = game.find_all('div',{'class':'trophy-count'})[0].find_all('span')
 			general_progress = trophie_progress[6].string
 			trophie_progress = [trophie_progress[n].string for n in range(len(trophie_progress)) if n%2!=0]
-
-						
+	
 			try:
 				last = 	self.__replacerList(game.find_all('div',{'class':'small-info'})[1].get_text(),[["  ",""],["\n",""],["\t",""]])
 			except IndexError:
