@@ -248,7 +248,6 @@ class Scraper:
 		table = self.souper.getSoup().find('table',{'class':'box zebra'}).find_all('tr')
 
 		for trophy in table:
-
 			generator = trophy.stripped_strings
 			trophy_title = generator.next()
 			game = generator.next()
@@ -262,4 +261,32 @@ class Scraper:
 								}
 							})
 
-		return trophies	
+		return trophies
+
+
+	def getLevelsTimestamp(self):
+		levels = {}
+		level_soup = self.souper.soupByLink(self.base_link + self.psn_id + '/levels')
+		table = level_soup.find('table',{'box zebra animate'}).find_all('tr')
+
+		for trophy in reversed(table):
+			level_reached = trophy.get('id').replace("level-","")
+			generator = trophy.stripped_strings
+			trophy_title = generator.next()
+			trophy_description = generator.next()
+			timestamp = util.replaceByList(trophy.find('span',{'class':'separator left'}).get_text(),[["\t",""],["\n"," "],["\r",""]])
+
+			levels.update({level_reached:{
+							'timestamp': timestamp,
+							'trophy' :{ 
+							'title':trophy_title,
+							'description':trophy_description
+							}
+						}
+					})
+
+		return levels	
+
+
+
+				

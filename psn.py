@@ -37,8 +37,10 @@ print('Json generated:\n\n')
 
 #print(json.dumps(scrap.getCountTrophiesRarity(),indent = 4))
 
-print(json.dumps(scrap.getTrophiesMilestones(),indent = 4))
+#print(json.dumps(scrap.getTrophiesMilestones(),indent = 4))
 
+
+print(json.dumps(scrap.getLevelsTimestamp(), indent=3))
 
 #print(re.compile('abc'))
 
