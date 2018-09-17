@@ -68,17 +68,17 @@ class Scraper:
 		trophies_count = [util.replaceByList(trophies_count[n].get_text(),[["\t",""],["\n",""],["\r",""]]) for n in range(len(trophies_count))]
 		
 		return { 
-					'level' : level, 
-					'percentage': percentage,
-				   	'country' : country,
-				   	'trophies' : {
-				   	'platinum': trophies_count[1],
-				   	'gold': trophies_count[2],
-				   	'silver': trophies_count[3],
-				   	'bronze': trophies_count[4],
-				   	'total': trophies_count[0]
-				   	}
-				}
+		'level' : level, 
+		'percentage': percentage,
+		'country' : country,
+		'trophies' : {
+		'platinum': trophies_count[1],
+		'gold': trophies_count[2],
+		'silver': trophies_count[3],
+		'bronze': trophies_count[4],
+		'total': trophies_count[0]
+			}
+		}
 
 
 
@@ -87,14 +87,14 @@ class Scraper:
 		stats_array = [stats_generator[n].stripped_strings.next() for n in range(len(stats_generator)) if n%2==0]
 		
 		return {
-					'played': stats_array[0],
-					'completed' : stats_array[1],
-					'completion' : stats_array[2],
-					'unearned_trophies': stats_array[3],
-					'per_day':stats_array[4],
-					'views': stats_array[5],
-					'world_rank' : stats_array[6],
-					'country_rank': stats_array[7]
+		'played': stats_array[0],
+		'completed' : stats_array[1],
+		'completion' : stats_array[2],
+		'unearned_trophies': stats_array[3],
+		'per_day':stats_array[4],
+		'views': stats_array[5],
+		'world_rank' : stats_array[6],
+		'country_rank': stats_array[7]
 		}
 
 		
@@ -130,19 +130,20 @@ class Scraper:
 
 
 					recent.update({title: {
-									'description': description,
-									'trophy_number': trophy_number, 
-									'timestamp': timestamp,
-									'achievers': achievers,
-									'game_owners': game_owners,
-									'game' : game,
-									'type': type,
-									'rarity':{
-									'percentage': rarity_percentage,
-									'type' : rarity_type
-							} 
-						}
+					'description': description,
+					'trophy_number': trophy_number, 
+					'timestamp': timestamp,
+					'achievers': achievers,
+					'game_owners': game_owners,
+					'game' : game,
+					'type': type,
+					'rarity':{
+					'percentage': rarity_percentage,
+					'type' : rarity_type
+						} 
+					}
 					})
+
 				except IndexError:
 					break
 
@@ -168,16 +169,17 @@ class Scraper:
 			type = trophy.find_all('img')[1].get('alt')
 
 			rarest.update({title:{
-							'game':game,
-							'type' : type,
-							'rarity':{
-								'percentage': rarity_percentage,
-								'type' : rarity_type
-					}
+			'game':game,
+			'type' : type,
+			'rarity':{
+			'percentage': rarity_percentage,
+			'type' : rarity_type
 				}
+			}
 			})
 
 		return rarest
+
 
 
 
@@ -186,12 +188,15 @@ class Scraper:
 		count_generator = self.souper.getSoup().find('div',{'class':'row lg-hide'}).stripped_strings
 
 		return {
-					count_generator.next(): count_generator.next(),
-					count_generator.next(): count_generator.next(),
-					count_generator.next(): count_generator.next(),
-					count_generator.next(): count_generator.next(),
-					count_generator.next(): count_generator.next()
+		count_generator.next(): count_generator.next(),
+		count_generator.next(): count_generator.next(),
+		count_generator.next(): count_generator.next(),
+		count_generator.next(): count_generator.next(),
+		count_generator.next(): count_generator.next()
 		}
+
+
+
 
 
 
@@ -222,24 +227,24 @@ class Scraper:
 
 
 			games.update({name:{
-								'trophies': {
-								'earned': earned , 
-								'unearned': unearned, 
-								'last': last,
-								'progress' : general_progress,
-									'count':{
-									'gold': trophie_progress[0],
-									'silver': trophie_progress[1],
-									'bronze' : trophie_progress[2]
-									}
-								},
-
-								'platforms' : platforms,
-								'rank': rank 
-							}
-						})
+			'trophies': {
+				'earned': earned , 
+				'unearned': unearned, 
+				'last': last,
+				'progress' : general_progress,
+				'count':{
+				'gold': trophie_progress[0],
+				'silver': trophie_progress[1],
+				'bronze' : trophie_progress[2]
+					}
+				},
+			'platforms' : platforms,
+			'rank': rank 
+			}
+			})
 
 		return games
+
 
 
 
@@ -255,13 +260,15 @@ class Scraper:
 			timestamp = generator.next()
 
 			trophies.update({trophy_title:{
-								'game' : game,
-								'description' : description,
-								'timestamp' : timestamp
-								}
-							})
+			'game' : game,
+			'description' : description,
+			'timestamp' : timestamp
+			}
+			})
 
 		return trophies
+
+
 
 
 	def getLevelsTimestamp(self):
@@ -277,13 +284,13 @@ class Scraper:
 			timestamp = util.replaceByList(trophy.find('span',{'class':'separator left'}).get_text(),[["\t",""],["\n"," "],["\r",""]])
 
 			levels.update({level_reached:{
-							'timestamp': timestamp,
-							'trophy' :{ 
-							'title':trophy_title,
-							'description':trophy_description
-							}
-						}
-					})
+			'timestamp': timestamp,
+			'trophy' :{ 
+			'title':trophy_title,
+			'description':trophy_description
+					}
+				}
+			})
 
 		return levels	
 
