@@ -1,5 +1,5 @@
 import requests,json,re,time
-from clases import *
+from web import *
 from bs4 import BeautifulSoup
 
 
@@ -10,7 +10,8 @@ except NameError:
 
 
 print('Scraping.....')
-scrap = Scraper(psnid)
+scrap = Scraper(psnid,'https://psnprofiles.com/')
+scrap.setSouperSoup()
 print('\nData scraped from: {0} \n Played Games {1}'.format(scrap.getPageName(),psnid))
 print('Json generated:\n\n')
 
@@ -21,17 +22,22 @@ print('Json generated:\n\n')
 #print(juegos.keys())
 #print('\n\n\n')
 
-#print(json.dumps(juegos,indent=4))
+#print(json.dumps(scrap.getGameTable(),indent=4))
 
 #print(json.dumps(scrap.getPlayerBasics(),indent=4))
 
 #print(json.dumps(scrap.getPlayerStats(),indent=4))
 
-#print(json.dumps(scrap.getRecentTrophies(), indent=4))
+#print(json.dumps(scrap.getRecentTrophies(number=1), indent=4))
+
+#print(len(scrap.getRecentTrophies(number=2).keys()))
+
 
 #print(json.dumps(scrap.getRarestTrophies(), indent = 4))
 
-print(json.dumps(scrap.getCountTrophiesRarity(),indent = 4))
+#print(json.dumps(scrap.getCountTrophiesRarity(),indent = 4))
+
+
 
 
 #print(re.compile('abc'))
