@@ -10,7 +10,7 @@ except NameError:
 
 
 print('Scraping.....')
-scrap = Scraper(psnid,'https://psnprofiles.com/')
+scrap = PlayerScraper(psnid)
 scrap.setSouperSoup()
 print('\nData scraped from: {0} \n Played Games {1}'.format(scrap.getPageName(),psnid))
 print('Json generated:\n\n')
@@ -28,7 +28,7 @@ print('Json generated:\n\n')
 
 #print(json.dumps(scrap.getPlayerStats(),indent=4))
 
-#print(json.dumps(scrap.getRecentTrophies(number=1), indent=4))
+#print(json.dumps(scrap.getRecentTrophies(number=3), indent=4))
 
 #print(len(scrap.getRecentTrophies(number=2).keys()))
 
@@ -40,7 +40,7 @@ print('Json generated:\n\n')
 #print(json.dumps(scrap.getTrophiesMilestones(),indent = 4))
 
 
-print(json.dumps(scrap.getLevelsTimestamp(), indent=3))
+#print(json.dumps(scrap.getLevelsTimestamp(), indent=3))
 
 #print(re.compile('abc'))
 

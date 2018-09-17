@@ -32,27 +32,36 @@ class Souper:
 
 
 
-
-
-
-
-
 class Scraper:
 
-	def __init__(self,psn_id,base_link):
-		self.psn_id = psn_id
+	def __init__(self,base_link = 'https://psnprofiles.com/'):
 		self.base_link = base_link
 		self.souper = Souper('html.parser')
 
-
 	def setSouperSoup(self, link = None):
-		if link is None : link = self.base_link
-		self.souper.setSoup(self.souper.soupByLink(link + self.psn_id))
-		
+		if link is None: link = self.base_link
+		self.souper.setSoup(self.souper.soupByLink(link))
 
 	def getPageName(self, utf_8 = True):
-		return self.souper.getSoup().title.string.encode('utf-8') if utf_8 else self.souper.getSoup().title.string
+		return self.souper.getSoup().title.string.encode('utf-8') if utf_8 else self.souper.getSoup().title.string	
 
+
+
+
+
+
+
+
+
+
+
+
+
+class PlayerScraper(Scraper):
+
+	def __init__(self,psn_id,base_link = 'https://psnprofiles.com/'):
+		Scraper.__init__(self, base_link + psn_id)
+		
 
 	def getPlayerBasics(self):
 		profile = self.souper.getSoup().find('ul',{'class':'profile-bar'})
