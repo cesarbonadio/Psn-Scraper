@@ -240,3 +240,26 @@ class Scraper:
 						})
 
 		return games
+
+
+
+	def getTrophiesMilestones(self):
+		trophies = {}
+		table = self.souper.getSoup().find('table',{'class':'box zebra'}).find_all('tr')
+
+		for trophy in table:
+
+			generator = trophy.stripped_strings
+			trophy_title = generator.next()
+			game = generator.next()
+			description = generator.next()
+			timestamp = generator.next()
+
+			trophies.update({trophy_title:{
+								'game' : game,
+								'description' : description,
+								'timestamp' : timestamp
+								}
+							})
+
+		return trophies	
