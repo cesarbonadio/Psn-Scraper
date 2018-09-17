@@ -12,11 +12,16 @@ class BeautifulSoupTest(unittest.TestCase):
 
     def test_null_parser(self):
     	self.assertEqual(BeautifulSoup(self.doc), BeautifulSoup(self.doc,self.parser),'They are not the same')
-    	self.assertEqual(self.souper.soupByString(self.doc),self.souper2.soupByString(self.doc))
+
+    def test_pythonic_method(self):
+    	#at Souper class
+    	self.assertEqual(self.souper.soupByString(self.doc),self.souper2.soupByString(self.doc))		
     		
     def tearDown(self):
         self.doc = None
         self.parser = None
+        self.souper = None
+        self.souper2 = None
 
 if __name__ == '__main__':
 	unittest.main()

@@ -16,13 +16,11 @@ class Souper:
 
 	def soupByLink(self,link):
 		r = requests.get(link)
-		soup = BeautifulSoup(r.content,self.__parser) if self.__parser else BeautifulSoup(r.content)
-		return soup
+		return BeautifulSoup(r.content,self.__parser) if self.__parser else BeautifulSoup(r.content)	
 
 	def soupByString(self,doc):
-		soup = BeautifulSoup(doc,self.__parser) if self.__parser else BeautifulSoup(doc)
-		return soup
-
+		return BeautifulSoup(doc,self.__parser) if self.__parser else BeautifulSoup(doc)
+	
 	def setSoup(self,soup):
 		self.__soup = soup
 
@@ -52,9 +50,8 @@ class Scraper:
 		self.souper.setSoup(self.souper.soupByLink(link + self.psn_id))
 		
 
-	def getPageName(self):
-		return self.souper.getSoup().title.string.encode('utf-8')
-
+	def getPageName(self, utf_8 = True):
+		return self.souper.getSoup().title.string.encode('utf-8') if utf_8 else self.souper.getSoup().title.string
 
 
 	def getPlayerBasics(self):
@@ -292,7 +289,8 @@ class Scraper:
 				}
 			})
 
-		return levels	
+		return levels
+
 
 
 
