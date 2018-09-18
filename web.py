@@ -32,9 +32,10 @@ class Souper:
 
 
 
+
 class Scraper:
 
-	def __init__(self,base_link = 'https://psnprofiles.com/'):
+	def __init__(self,base_link):
 		self.base_link = base_link
 		self.souper = Souper('html.parser')
 
@@ -49,9 +50,29 @@ class Scraper:
 
 
 
+class SiteScraper(Scraper):
 
 
+	def __init__(self,base_link = 'https://psnprofiles.com/'):
+		Scraper.__init__(self,base_link)
 
+
+	def getLeaderBoards():
+		pass
+
+
+	def getSiteStats(self):
+		stats = self.souper.getSoup().find('div',{'class':'stats flex'}).stripped_strings
+
+		return {
+		stats.next().lower().replace(" ","_"): stats.next(),
+		stats.next().lower().replace(" ","_"): stats.next(),
+		stats.next().lower().replace(" ","_"): stats.next(),
+		stats.next().lower().replace(" ","_"): stats.next(),
+		stats.next().lower().replace(" ","_"): stats.next(),
+		stats.next().lower().replace(" ","_"): stats.next(),
+		stats.next().lower().replace(" ","_"): stats.next()
+		}
 
 
 
@@ -111,7 +132,7 @@ class PlayerScraper(Scraper):
 
 		for i in range((number//50)+1):
 
-			log_soup = self.souper.soupByLink(self.base_link + self.psn_id + '/log'+'?page='+str(i+1))
+			log_soup = self.souper.soupByLink(self.base_link + '/log'+'?page='+str(i+1))
 			recent_table = log_soup.find('table',{'class':'zebra'}).find_all('tr')
 			recent = {}
 
@@ -191,14 +212,14 @@ class PlayerScraper(Scraper):
 
 
 	def getCountTrophiesRarity(self):
-		count_generator = self.souper.getSoup().find('div',{'class':'row lg-hide'}).stripped_strings
+		count = self.souper.getSoup().find('div',{'class':'row lg-hide'}).stripped_strings
 
 		return {
-		count_generator.next(): count_generator.next(),
-		count_generator.next(): count_generator.next(),
-		count_generator.next(): count_generator.next(),
-		count_generator.next(): count_generator.next(),
-		count_generator.next(): count_generator.next()
+		count.next().lower().replace(" ","_"): count.next(),
+		count.next().lower().replace(" ","_"): count.next(),
+		count.next().lower().replace(" ","_"): count.next(),
+		count.next().lower().replace(" ","_"): count.next(),
+		count.next().lower().replace(" ","_"): count.next()
 		}
 
 
@@ -279,7 +300,7 @@ class PlayerScraper(Scraper):
 
 	def getLevelsTimestamp(self):
 		levels = {}
-		level_soup = self.souper.soupByLink(self.base_link + self.psn_id + '/levels')
+		level_soup = self.souper.soupByLink(self.base_link + '/levels')
 		table = level_soup.find('table',{'box zebra animate'}).find_all('tr')
 
 		for trophy in reversed(table):

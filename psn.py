@@ -15,12 +15,13 @@ scrap.setSouperSoup()
 print('\nData scraped from: {0} \n Played Games {1}'.format(scrap.getPageName(),psnid))
 print('Json generated:\n\n')
 
-#juegos =  scrap.getGameTable()
 
-#print(juegos['Minecraft']['trophies']['earned'])
-#print(type(juegos))
-#print(juegos.keys())
-#print('\n\n\n')
+site = SiteScraper()
+site.setSouperSoup()
+
+print(json.dumps(site.getSiteStats(),indent = 3))
+
+
 
 #print(json.dumps(scrap.getGameTable(),indent=4))
 
