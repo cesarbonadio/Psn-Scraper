@@ -1,49 +1,45 @@
-import requests,json,re,time
+import requests,json,re,time,unittest
 from web import *
 from bs4 import BeautifulSoup
 
+#Test case class to see how works the scraper. To run: "python psn.py"
 
-try:
-	psnid = raw_input('Give me a psn id: ')
-except NameError:
-	psnid = input('Give me a psn id: ')
+class ScraperTest(unittest.TestCase):
 
+	def setUp(self):	
+		try:
+			#python 2
+			self.psnid = raw_input('Give me a psn id: ')
+		except NameError:
+			#python 3
+			self.psnid = input('Give me a psn id: ')
 
-print('Scraping.....')
-scrap = PlayerScraper(psnid)
-scrap.setSouperSoup()
-print('\nData scraped from: {0} \n Played Games {1}'.format(scrap.getPageName(),psnid))
-print('Json generated:\n\n')
+		self.player = PlayerScraper(self.psnid)
+		self.site = SiteScraper()
+		
 
+	def testDicScraper(self):
+		self.player.setSouperSoup() #Default link
+		self.site.setSouperSoup() #Default link
+		print('\nData scraped from: {0}'.format(self.player.getPageName()))
+		print(json.dumps(self.site.getSiteStats(),indent = 3))
+		#print(json.dumps(self.player.getGameTable(),indent=4))
+		#print(json.dumps(self.player.getPlayerBasics(),indent=4))
+		print(json.dumps(self.player.getPlayerStats(),indent=4))
+		#print(json.dumps(self.player.getRecentTrophies(number=3), indent=4))
+		#print(len(self.player.getRecentTrophies(number=2).keys()))
+		#print(json.dumps(self.player.getRarestTrophies(), indent = 4))
+		#print(json.dumps(self.player.getCountTrophiesRarity(),indent = 4))
+		#print(json.dumps(self.player.getTrophiesMilestones(),indent = 4))
+		#print(json.dumps(self.player.getLevelsTimestamp(), indent=3))
 
-site = SiteScraper()
-site.setSouperSoup()
+	def tearDown(self):
+		self.psnid = None
+		self.player = None
+		self.site = None
 
-print(json.dumps(site.getSiteStats(),indent = 3))
-
-
-
-#print(json.dumps(scrap.getGameTable(),indent=4))
-
-#print(json.dumps(scrap.getPlayerBasics(),indent=4))
-
-#print(json.dumps(scrap.getPlayerStats(),indent=4))
-
-#print(json.dumps(scrap.getRecentTrophies(number=3), indent=4))
-
-#print(len(scrap.getRecentTrophies(number=2).keys()))
-
-
-#print(json.dumps(scrap.getRarestTrophies(), indent = 4))
-
-#print(json.dumps(scrap.getCountTrophiesRarity(),indent = 4))
-
-#print(json.dumps(scrap.getTrophiesMilestones(),indent = 4))
-
-
-#print(json.dumps(scrap.getLevelsTimestamp(), indent=3))
-
-#print(re.compile('abc'))
+if __name__ == '__main__':
+	unittest.main()			
 
 
 

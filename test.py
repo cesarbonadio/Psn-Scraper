@@ -24,7 +24,7 @@ class BeautifulSoupTest(unittest.TestCase):
 		self.souper2 = None
 
 
-class ScraperTest(unittest.TestCase):
+class FakeScraperTest(unittest.TestCase):
 
 	def setUp(self):
 		self.scraper = Scraper('http://google.com')
